@@ -1,16 +1,15 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import {
 	FaFacebookF,
 	FaTwitter,
-	FaLinkedinIn,
 	FaInstagram,
 	FaMapMarkerAlt,
 	FaPhoneAlt,
 	FaEnvelope,
 	FaChevronRight,
+	FaYoutube,
 } from "react-icons/fa";
 import Image from "next/image";
 import logo from "@/assets/logo.png";
@@ -43,26 +42,26 @@ export default function Footer() {
 							the Upstream Oil & Gas Sector.
 						</p>
 						<div className="flex space-x-4">
-							<a
-								href="#"
+							<Link
+								href="https://www.facebook.com/nuprchotline"
 								className="h-8 w-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
 								<FaFacebookF size={14} />
-							</a>
-							<a
-								href="#"
+							</Link>
+							<Link
+								href="https://twitter.com/nuprcofficial"
 								className="h-8 w-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
 								<FaTwitter size={14} />
-							</a>
-							<a
-								href="#"
+							</Link>
+							<Link
+								href="https://youtube.com/@nigerianupstream?si=mtpou0aZy8Gq06Ek"
 								className="h-8 w-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
-								<FaLinkedinIn size={14} />
-							</a>
-							<a
-								href="#"
+								<FaYoutube size={14} />
+							</Link>
+							<Link
+								href="http://instagram.com/nuprc_ng"
 								className="h-8 w-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
 								<FaInstagram size={14} />
-							</a>
+							</Link>
 						</div>
 					</div>
 
@@ -141,11 +140,11 @@ export default function Footer() {
 							</li>
 							<li className="flex items-center">
 								<FaEnvelope className="text-primary mr-3 shrink-0" />
-								<a
+								<Link
 									href="mailto:info@nuprc.gov.ng"
 									className="hover:text-white transition-colors">
 									info@nuprc.gov.ng
-								</a>
+								</Link>
 							</li>
 						</ul>
 					</div>
@@ -184,13 +183,13 @@ export default function Footer() {
 						</p>
 						{/* <p className="flex items-center gap-2">
 							Powered by{" "}
-							<a
+							<Link
 								href="https://apusindustries.vercel.app/"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="font-semibold text-gray-300 hover:text-primary transition-colors">
 								Apus Industries Limited
-							</a>
+							</Link>
 						</p> */}
 					</div>
 				</div>
