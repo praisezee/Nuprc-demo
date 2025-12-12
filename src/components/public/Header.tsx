@@ -54,7 +54,7 @@ export default function Header() {
 					</NavLink>
 
 					<Dropdown
-						title="ABOUT US"
+						title="ABOUT"
 						active={pathname.startsWith("/about-us")}>
 						<DropdownLink href="/history">History</DropdownLink>
 						<DropdownLink href="/value-statement">Our Value Statements</DropdownLink>
@@ -149,7 +149,7 @@ export default function Header() {
 						</MobileNavLink>
 
 						<MobileDropdown
-							title="About Us"
+							title="About"
 							isOpen={activeDropdown === "about"}
 							onToggle={() => toggleDropdown("about")}>
 							<MobileDropdownLink
