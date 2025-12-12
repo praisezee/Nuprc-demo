@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { FaSpinner } from "react-icons/fa";
 import FloatingAI from "@/components/ui/FloatingAI";
+import { ToastProvider } from "@/context/ToastContext";
 
 export default function AdminLayout({
 	children,
@@ -58,12 +59,14 @@ export default function AdminLayout({
 
 	// Protected layout with sidebar
 	return (
-		<div className="flex h-screen bg-gray-50">
-			<AdminSidebar />
-			<main className="flex-1 overflow-auto p-8">
-				<div className="max-w-7xl mx-auto">{children}</div>
-			</main>
-			<FloatingAI />
-		</div>
+		<ToastProvider>
+			<div className="flex h-screen bg-gray-50">
+				<AdminSidebar />
+				<main className="flex-1 overflow-auto p-8">
+					<div className="max-w-7xl mx-auto">{children}</div>
+				</main>
+				<FloatingAI />
+			</div>
+		</ToastProvider>
 	);
 }
