@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { HeroSection } from "@/components/ui";
 import PublicLayout from "@/components/public/PublicLayout";
