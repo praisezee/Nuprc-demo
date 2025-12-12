@@ -129,10 +129,7 @@ export default function Footer() {
 						<ul className="space-y-4 text-sm text-gray-400">
 							<li className="flex items-start">
 								<FaMapMarkerAlt className="text-primary mt-1 mr-3 shrink-0" />
-								<span>
-									The Energy Center, Plot 1159, Cadastral Zone AO, P.M.B 311, Garki,
-									Abuja, FCT.
-								</span>
+								<span>7, Sylvester Ugoh Street, Jabi, Abuja FCT</span>
 							</li>
 							<li className="flex items-center">
 								<FaPhoneAlt className="text-primary mr-3 shrink-0" />
@@ -185,7 +182,7 @@ export default function Footer() {
 							© {currentYear} Nigerian Upstream Petroleum Regulatory Commission. All
 							rights reserved.
 						</p>
-						<p className="flex items-center gap-2">
+						{/* <p className="flex items-center gap-2">
 							Powered by{" "}
 							<a
 								href="https://apusindustries.vercel.app/"
@@ -194,7 +191,7 @@ export default function Footer() {
 								className="font-semibold text-gray-300 hover:text-primary transition-colors">
 								Apus Industries Limited
 							</a>
-						</p>
+						</p> */}
 					</div>
 				</div>
 			</div>
