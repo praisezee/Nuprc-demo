@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+:root {
+	--background: #ffffff;
+	--foreground: #171717;
+
+	/* Nigerian Green Palette */
+	--primary-green: #008751; /* Official Green */
+	--primary-green-dark: #006d41;
+	--primary-green-light: #2e9e6d;
+	--accent-gold: #d4af37;
+}
+
+body {
+	color: var(--foreground);
+	background: var(--background);
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@layer base {
+	input,
+	textarea,
+	select {
+		@apply bg-white text-gray-900 border-gray-300;
+	}
+}
+
+.animate-fadeIn {
+	animation: fadeIn 0.3s ease-in-out;
+}
