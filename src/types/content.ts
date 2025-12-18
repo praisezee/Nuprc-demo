@@ -11,7 +11,7 @@ export interface INews {
 	content: string;
 	excerpt: string;
 	featuredImage?: string;
-	thumbnailUrl?: string; // Add this just in case
+	images: string[];
 	category: string;
 	tags: string[];
 	author: string | { firstName: string; lastName: string };

@@ -3,11 +3,18 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import PublicLayout from "@/components/public/PublicLayout";
 import { HeroSection } from "@/components/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import api from "@/lib/api";
-import { FaSpinner, FaCalendarAlt, FaNewspaper } from "react-icons/fa";
+import {
+	FaSpinner,
+	FaCalendarAlt,
+	FaNewspaper,
+	FaSearch,
+} from "react-icons/fa";
+import SearchInput from "@/components/ui/SearchInput";
 
 interface NewsItem {
 	_id: string;
@@ -21,8 +28,18 @@ interface NewsItem {
 }
 
 export default function NewsPage() {
+	const searchParams = useSearchParams();
+	const initialSearch = searchParams.get("q") || "";
+
 	const [news, setNews] = useState<NewsItem[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [searchTerm, setSearchTerm] = useState(initialSearch);
+
+	useEffect(() => {
+		// Sync with search params if they change
+		const q = searchParams.get("q");
+		if (q !== null) setSearchTerm(q);
+	}, [searchParams]);
 
 	useEffect(() => {
 		const fetchNews = async () => {
@@ -30,7 +47,7 @@ export default function NewsPage() {
 				const { data } = await api.get("/news", {
 					params: {
 						status: "published",
-						limit: 9, // Fetch 9 items initially
+						limit: 50, // Fetch more to support local search
 					},
 				});
 				setNews(data.data);
@@ -44,6 +61,13 @@ export default function NewsPage() {
 		fetchNews();
 	}, []);
 
+	const filteredNews = news.filter(
+		(item) =>
+			item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			item.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			item.category.toLowerCase().includes(searchTerm.toLowerCase())
+	);
+
 	return (
 		<PublicLayout>
 			<HeroSection
@@ -53,23 +77,34 @@ export default function NewsPage() {
 			/>
 			<section className="py-20 bg-gray-50">
 				<div className="container mx-auto px-4 md:px-8">
+					<div className="mb-12 max-w-2xl mx-auto">
+						<SearchInput
+							placeholder="Search news, events, announcements..."
+							onSearch={setSearchTerm}
+						/>
+					</div>
+
 					{loading ? (
 						<div className="flex justify-center items-center py-20">
 							<FaSpinner className="animate-spin h-12 w-12 text-primary" />
 						</div>
-					) : news.length === 0 ? (
+					) : filteredNews.length === 0 ? (
 						<div className="text-center py-20 bg-white rounded-xl shadow-sm">
 							<FaNewspaper className="mx-auto text-4xl text-gray-300 mb-4" />
 							<h3 className="text-xl font-bold text-gray-600">
-								No news articles found
+								{searchTerm
+									? "No results found for your search"
+									: "No news articles found"}
 							</h3>
 							<p className="text-gray-500 mt-2">
-								Please check back later for updates.
+								{searchTerm
+									? "Try different keywords or check back later."
+									: "Please check back later for updates."}
 							</p>
 						</div>
 					) : (
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-							{news.map((item) => (
+							{filteredNews.map((item) => (
 								<Card
 									key={item._id}
 									className="h-full hover:shadow-xl transition-all group overflow-hidden flex flex-col">

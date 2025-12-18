@@ -10,6 +10,7 @@ import {
 	FaQuestionCircle,
 	FaSpinner,
 } from "react-icons/fa";
+import SearchInput from "@/components/ui/SearchInput";
 
 interface FAQ {
 	_id: string;
@@ -21,7 +22,8 @@ interface FAQ {
 export default function FAQPage() {
 	const [faqs, setFaqs] = useState<FAQ[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [openIndex, setOpenIndex] = useState<number | null>(0); // Open first one by default
+	const [openIndex, setOpenIndex] = useState<number | null>(0);
+	const [searchTerm, setSearchTerm] = useState("");
 
 	useEffect(() => {
 		const fetchFaqs = async () => {
@@ -43,6 +45,13 @@ export default function FAQPage() {
 		setOpenIndex(openIndex === index ? null : index);
 	};
 
+	const filteredFaqs = faqs.filter(
+		(faq) =>
+			faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			faq.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			faq.category.toLowerCase().includes(searchTerm.toLowerCase())
+	);
+
 	return (
 		<PublicLayout>
 			<PageHeader
@@ -51,17 +60,27 @@ export default function FAQPage() {
 			/>
 
 			<div className="max-w-3xl mx-auto px-4 py-20">
+				{/* Search Bar */}
+				<div className="mb-12">
+					<SearchInput
+						placeholder="Search for answers..."
+						onSearch={setSearchTerm}
+					/>
+				</div>
 				{loading ? (
 					<div className="flex justify-center py-20">
 						<FaSpinner className="animate-spin h-10 w-10 text-primary" />
 					</div>
-				) : faqs.length === 0 ? (
-					<div className="text-center py-20">
-						<h3 className="text-xl font-bold text-gray-600">No questions found.</h3>
+				) : filteredFaqs.length === 0 ? (
+					<div className="text-center py-20 bg-gray-50 rounded-xl">
+						<FaQuestionCircle className="mx-auto text-4xl text-gray-300 mb-4" />
+						<h3 className="text-xl font-bold text-gray-600">
+							{searchTerm ? "No results found" : "No questions found"}
+						</h3>
 					</div>
 				) : (
 					<div className="space-y-4">
-						{faqs.map((faq, index) => (
+						{filteredFaqs.map((faq, index) => (
 							<div
 								key={faq._id}
 								className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md bg-white">

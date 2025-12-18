@@ -97,7 +97,7 @@ export default function Footer() {
 							</li>
 							<li>
 								<Link
-									href="/technical/annual-reports"
+									href="/reports"
 									className="hover:text-white flex items-center transition-colors">
 									<FaChevronRight className="text-primary mr-2 text-xs" /> Annual Reports
 								</Link>
@@ -141,9 +141,9 @@ export default function Footer() {
 							<li className="flex items-center">
 								<FaEnvelope className="text-primary mr-3 shrink-0" />
 								<Link
-									href="mailto:info@nuprc.gov.ng"
+									href="mailto:nuprc@nuprc.gov.ng"
 									className="hover:text-white transition-colors">
-									info@nuprc.gov.ng
+									nuprc@nuprc.gov.ng
 								</Link>
 							</li>
 						</ul>

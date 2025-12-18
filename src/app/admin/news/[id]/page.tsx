@@ -31,6 +31,7 @@ export default function EditNewsPage() {
 		tags: "",
 		status: "draft",
 		featuredImage: "",
+		images: [] as string[],
 		publishedAt: "",
 	});
 
@@ -57,6 +58,7 @@ export default function EditNewsPage() {
 					tags: tagsString,
 					status: news.status || "draft",
 					featuredImage: news.featuredImage || "",
+					images: news.images || [],
 					publishedAt: dateStr,
 				});
 			} catch (error) {
@@ -74,32 +76,50 @@ export default function EditNewsPage() {
 	}, [id, router]);
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (!file) return;
-
-		const formData = new FormData();
-		formData.append("file", file);
-		formData.append("folder", "news");
+		const files = e.target.files;
+		if (!files || files.length === 0) return;
 
 		setUploading(true);
 		try {
-			const { data } = await api.post("/upload", formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-			});
-			setFormData((prev) => ({ ...prev, featuredImage: data.data.url }));
-			showToast("Image uploaded successfully", "success");
+			const newImages: string[] = [];
+
+			for (const file of Array.from(files)) {
+				const uploadFormData = new FormData();
+				uploadFormData.append("file", file);
+				uploadFormData.append("folder", "news");
+
+				const { data } = await api.post("/upload", uploadFormData, {
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				});
+				newImages.push(data.data.url);
+			}
+
+			setFormData((prev) => ({
+				...prev,
+				featuredImage: prev.featuredImage || newImages[0],
+				images: [...prev.images, ...newImages],
+			}));
+			showToast(`${newImages.length} image(s) uploaded successfully`, "success");
 		} catch (error) {
 			console.error("Upload failed:", error);
-			showToast("Failed to upload image", "error");
+			showToast("Failed to upload image(s)", "error");
 		} finally {
 			setUploading(false);
 		}
 	};
 
-	const removeImage = () => {
-		setFormData((prev) => ({ ...prev, featuredImage: "" }));
+	const removeImage = (index: number) => {
+		setFormData((prev) => {
+			const newImages = [...prev.images];
+			const removed = newImages.splice(index, 1)[0];
+			let newFeatured = prev.featuredImage;
+			if (removed === prev.featuredImage) {
+				newFeatured = newImages.length > 0 ? newImages[0] : "";
+			}
+			return { ...prev, images: newImages, featuredImage: newFeatured };
+		});
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -193,55 +213,48 @@ export default function EditNewsPage() {
 						</div>
 					</div>
 
-					{/* Featured Image */}
+					{/* Featured Image & Gallery */}
 					<div>
-						<label className="block text-sm font-medium text-gray-700 mb-1">
-							Featured Image
+						<label className="block text-sm font-medium text-gray-700 mb-2">
+							Images (First one will be featured)
 						</label>
-						<div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg relative">
-							{formData.featuredImage ? (
-								<div className="relative w-full h-48">
+						<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-4">
+							{formData.images.map((img, idx) => (
+								<div
+									key={idx}
+									className={`relative aspect-square rounded-lg overflow-hidden border-2 ${
+										formData.featuredImage === img ? "border-primary" : "border-gray-200"
+									}`}>
 									<Image
-										src={formData.featuredImage}
-										alt="Featured"
+										src={img}
+										alt={`Gallery ${idx}`}
 										fill
-										className="object-cover rounded-md"
+										className="object-cover"
 									/>
 									<button
 										type="button"
-										onClick={removeImage}
-										className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
-										<FaTimes />
+										onClick={() => removeImage(idx)}
+										className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors z-10">
+										<FaTimes className="text-[10px]" />
 									</button>
-								</div>
-							) : (
-								<div className="space-y-1 text-center">
-									{uploading ? (
-										<div className="text-gray-500">Uploading...</div>
-									) : (
-										<>
-											<FaCloudUploadAlt className="mx-auto h-12 w-12 text-gray-400" />
-											<div className="flex text-sm text-gray-600">
-												<label
-													htmlFor="file-upload"
-													className="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-primary-dark focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
-													<span>Upload a file</span>
-													<input
-														id="file-upload"
-														name="file-upload"
-														type="file"
-														className="sr-only"
-														accept="image/*"
-														onChange={handleFileChange}
-													/>
-												</label>
-												<p className="pl-1">or drag and drop</p>
-											</div>
-											<p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-										</>
+									{formData.featuredImage === img && (
+										<div className="absolute inset-x-0 bottom-0 bg-primary/80 text-white text-[10px] py-0.5 text-center font-bold">
+											FEATURED
+										</div>
 									)}
 								</div>
-							)}
+							))}
+							<label className="border-2 border-dashed border-gray-300 rounded-lg aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
+								<input
+									type="file"
+									multiple
+									onChange={handleFileChange}
+									className="sr-only"
+									accept="image/*"
+								/>
+								<FaCloudUploadAlt className="text-gray-400 text-2xl mb-1" />
+								<span className="text-[10px] text-gray-500 font-medium">Add Image</span>
+							</label>
 						</div>
 					</div>
 

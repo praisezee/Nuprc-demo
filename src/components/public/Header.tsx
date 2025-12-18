@@ -4,8 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import logo from "@/assets/nuprcanim.gif";
+import logo from "@/assets/logo.png";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+
+import TopBar from "./TopBar";
+import NewsTicker from "./NewsTicker";
 
 export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,11 +20,11 @@ export default function Header() {
 	};
 
 	return (
-		<header className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-md border-b border-primary/10">
-			{/* Top Bar (Optional for contact info etc.) - Keeping simple for now but adding green bar top */}
-			<div className="h-2 w-full bg-linear-to-r from-primary-dark via-primary to-accent"></div>
+		<header className="fixed top-0 left-0 w-full z-[9999] bg-white shadow-md border-b border-primary/10 transition-all duration-300">
+			{/* Top Bar with Contact Info */}
+			<TopBar />
 
-			<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+			<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center bg-white/95 backdrop-blur-md relative z-30">
 				{/* Logo */}
 				<Link
 					href="/"
@@ -136,6 +139,11 @@ export default function Header() {
 						<FaBars className="w-6 h-6 text-primary" />
 					)}
 				</button>
+			</div>
+
+			{/* News Ticker Slider */}
+			<div className="relative z-10">
+				<NewsTicker />
 			</div>
 
 			{/* Mobile Nav */}
@@ -322,7 +330,7 @@ function Dropdown({
 				{title}{" "}
 				<FaChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
 			</button>
-			<div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 p-2 overflow-hidden z-50">
+			<div className="absolute top-full left-0 mt-3 w-64 bg-white rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 p-2 overflow-hidden z-[9999]">
 				{children}
 			</div>
 		</div>

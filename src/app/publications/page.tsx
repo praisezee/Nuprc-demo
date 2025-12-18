@@ -4,8 +4,11 @@ import React, { useState, useEffect } from "react";
 import PublicLayout from "@/components/public/PublicLayout";
 import { HeroSection } from "@/components/ui";
 import { Card, CardBody } from "@/components/ui/Card";
+import { useSearchParams } from "next/navigation";
 import api from "@/lib/api";
 import { FaBook, FaFilePdf, FaSpinner, FaDownload } from "react-icons/fa";
+
+import SearchInput from "@/components/ui/SearchInput";
 
 interface Publication {
 	_id: string;
@@ -20,15 +23,24 @@ interface Publication {
 }
 
 export default function PublicationsPage() {
+	const searchParams = useSearchParams();
+	const initialSearch = searchParams.get("q") || "";
+
 	const [publications, setPublications] = useState<Publication[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [searchTerm, setSearchTerm] = useState(initialSearch);
+
+	useEffect(() => {
+		const q = searchParams.get("q");
+		if (q !== null) setSearchTerm(q);
+	}, [searchParams]);
 
 	useEffect(() => {
 		const fetchPublications = async () => {
 			try {
 				const { data } = await api.get("/publications", {
 					params: {
-						limit: 12,
+						limit: 50,
 					},
 				});
 				setPublications(data.data);
@@ -42,6 +54,13 @@ export default function PublicationsPage() {
 		fetchPublications();
 	}, []);
 
+	const filteredPublications = publications.filter(
+		(item) =>
+			item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			item.category.toLowerCase().includes(searchTerm.toLowerCase())
+	);
+
 	return (
 		<PublicLayout>
 			<HeroSection
@@ -51,20 +70,29 @@ export default function PublicationsPage() {
 			/>
 			<section className="py-20 bg-gray-50">
 				<div className="container mx-auto px-4 md:px-8">
+					<div className="mb-12 max-w-2xl mx-auto">
+						<SearchInput
+							placeholder="Search publications, journals, research..."
+							onSearch={setSearchTerm}
+						/>
+					</div>
+
 					{loading ? (
 						<div className="flex justify-center py-20">
 							<FaSpinner className="animate-spin h-10 w-10 text-primary" />
 						</div>
-					) : publications.length === 0 ? (
+					) : filteredPublications.length === 0 ? (
 						<div className="text-center py-20 bg-white rounded-xl shadow-sm">
 							<FaBook className="mx-auto text-4xl text-gray-300 mb-4" />
 							<h3 className="text-xl font-bold text-gray-600">
-								No publications found
+								{searchTerm
+									? "No results found for your search"
+									: "No publications found"}
 							</h3>
 						</div>
 					) : (
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-							{publications.map((item) => (
+							{filteredPublications.map((item) => (
 								<Card
 									key={item._id}
 									className="h-full hover:shadow-lg transition-all group border-t-4 border-primary/20 hover:border-primary flex flex-col">

@@ -51,7 +51,7 @@ export default function ContactPage() {
 									</div>
 									<div>
 										<h3 className="text-lg font-bold text-primary mb-2">Email</h3>
-										<p className="text-gray-600">info@nuprc.gov.ng</p>
+										<p className="text-gray-600">nuprc@nuprc.gov.ng</p>
 									</div>
 								</CardBody>
 							</Card>
@@ -113,6 +113,32 @@ export default function ContactPage() {
 								</form>
 							</div>
 						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Live Map Section */}
+			<section className="py-20 bg-white border-t border-gray-100">
+				<div className="container mx-auto px-4 md:px-8">
+					<div className="mb-10 text-center">
+						<h2 className="text-3xl font-bold text-primary mb-4">
+							Find Us on the Map
+						</h2>
+						<p className="text-gray-500 max-w-2xl mx-auto">
+							Visit our head office in Abuja. We are conveniently located in the Jabi
+							district.
+						</p>
+					</div>
+
+					<div className="w-full h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-gray-100">
+						<iframe
+							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3560.3874553804726!2d7.417096600000001!3d9.0614555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104e75b4a0d61043%3A0xc2e5b933997a9626!2sNUPRC%20HQ%20Nigerian%20Upstream%20Petroleum%20Regulatory%20Commission!5e1!3m2!1sen!2sng!4v1766033291699!5m2!1sen!2sng"
+							width="100%"
+							height="100%"
+							style={{ border: 0 }}
+							allowFullScreen={true}
+							loading="lazy"
+							referrerPolicy="no-referrer-when-downgrade"></iframe>
 					</div>
 				</div>
 			</section>

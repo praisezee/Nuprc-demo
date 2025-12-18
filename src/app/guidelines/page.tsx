@@ -4,13 +4,9 @@ import React, { useState, useEffect } from "react";
 import PublicLayout from "@/components/public/PublicLayout";
 import PageHeader from "@/components/public/PageHeader";
 import api from "@/lib/api";
-import {
-	FaFilePdf,
-	FaSearch,
-	FaSpinner,
-	FaDownload,
-	FaBook,
-} from "react-icons/fa";
+import { useSearchParams } from "next/navigation";
+import { FaFilePdf, FaSpinner, FaDownload, FaBook } from "react-icons/fa";
+import SearchInput from "@/components/ui/SearchInput";
 
 interface Regulation {
 	_id: string;
@@ -23,9 +19,17 @@ interface Regulation {
 }
 
 export default function GuidelinesPage() {
+	const searchParams = useSearchParams();
+	const initialSearch = searchParams.get("q") || "";
+
 	const [guidelines, setGuidelines] = useState<Regulation[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [search, setSearch] = useState("");
+	const [search, setSearch] = useState(initialSearch);
+
+	useEffect(() => {
+		const q = searchParams.get("q");
+		if (q !== null) setSearch(q);
+	}, [searchParams]);
 
 	useEffect(() => {
 		const fetchGuidelines = async () => {
@@ -59,17 +63,11 @@ export default function GuidelinesPage() {
 
 			<div className="max-w-7xl mx-auto px-4 py-16">
 				{/* Search Bar */}
-				<div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-10">
-					<div className="relative w-full max-w-2xl mx-auto">
-						<input
-							type="text"
-							placeholder="Search guidelines..."
-							value={search}
-							onChange={(e) => setSearch(e.target.value)}
-							className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-full focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-lg"
-						/>
-						<FaSearch className="absolute left-5 top-5 text-gray-400 text-lg" />
-					</div>
+				<div className="mb-10 max-w-2xl mx-auto">
+					<SearchInput
+						placeholder="Search guidelines, regulations, policies..."
+						onSearch={setSearch}
+					/>
 				</div>
 
 				{/* Content */}
